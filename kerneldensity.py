@@ -3,8 +3,7 @@ __author__ = '1'
 from sklearn.neighbors import KernelDensity
 import numpy as np
 
-def kerneldensity(x, fraction):
-def kerneldensity(x, fraction):
+def kerneldensity(x, fraction=0.02):
     numeration = [[i] for i in xrange(1, len(x)+1, 1)]
     numeration = np.array(numeration)
     y = np.hstack((numeration, x))
