@@ -6,6 +6,7 @@ import numpy as np
 #all parameters except data are additional
 #fraction is supposed fraction of outliers
 #kernel in (‘gaussian’;’tophat’;’epanechnikov’;’exponential’;’linear’;’cosine’)
+#returning values is numbers of rows in the dataset, which are marked as anomalies by algorithm
 def kerneldensity(data, fraction=0.02, kernel='gaussian', bandwidth = 1.0):
     numeration = [[i] for i in xrange(1, len(data)+1, 1)]
     numeration = np.array(numeration)
@@ -27,4 +28,6 @@ def kerneldensity(data, fraction=0.02, kernel='gaussian', bandwidth = 1.0):
 
     y = sorted(y, key = lambda x: x[0])
     y = np.array(y)
-    return y[:,0]
+
+    anomalies = y[:,0]
+    return anomalies

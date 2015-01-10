@@ -8,6 +8,7 @@ import numpy as np
 #degree is int degree of hte polynomial kernel function and applicable only for 'poly' kernel
 #gamma is float kernel coefficient for ‘rbf’, ‘poly’ and ‘sigmoid’ kernels
 #coeff is independent term in kernel function and applicable in ‘poly’ and ‘sigmoid’ kernels
+#returning values is numbers of rows in the dataset, which are marked as anomalies by algorithm
 def svm(data, fraction=0.05, kernel='poly', degree=3, gamma=0, coeff=0):
     svm = OneClassSVM(kernel=kernel, degree=degree, gamma=gamma, nu=fraction, coeff0=coeff)
     svm.fit(data)
