@@ -25,7 +25,7 @@ def kerneldensity(data, fraction=0.02, kernel='gaussian', bandwidth = 1.0):
     startindex = int(-round((fraction*len(y)), ndigits=0))-1
     anomalies = y[startindex:]
 
-    anomales = sorted(y, key = lambda x: x[0])
+    anomalies = sorted(anomalies, key = lambda x: x[0])
     anomalies = np.array(anomalies)
     anomalies = anomalies[:,0]
 

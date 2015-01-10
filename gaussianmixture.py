@@ -5,42 +5,30 @@ from sklearn.mixture import GMM
 
 #all parameters except data are additional
 #fraction is supposed fraction of outliers in the data
+#num_components is number of mixture components
 #returning values is numbers of rows in the dataset, which are marked as anomalies by algorithm
-def gaussianmixture(data, fraction=0.02):
-    num_splits = 10
-    max_num_components = 10
-    curr_total_loss = 0;
-    num_components = 0;
+def gaussianmixture(data, fraction=0.02, num_components=5):
+    numeration = [[i] for i in xrange(1, len(data)+1, 1)]
+    numeration = np.array(numeration)
 
-    for n in xrange(max_num_components):
-        gmm = GMM(n_components = n + 1, covariance_type = 'full')
-        gmm.fit(data)
-        loss = gmm_loss_function(gmm, data)
-        if (n == 0) :
-            curr_total_loss = loss
-            n = n + 1
-        elif (loss < curr_total_loss):
-            curr_total_loss = loss
-            num_components = n + 1
-
-    gmm = GMM(n_components = num_components, covariance_type = 'full')
+    gmm = GMM(n_components=num_components, covariance_type='full', n_init=5)
     gmm.fit(data)
-    return get_less_possible(gmm, data, fraction)
 
-def gmm_loss_function(gmm, data):
-    return log_likelihood(gmm, data)
+    score = np.exp(gmm.score(data))
+    score = score.reshape(numeration.shape)
 
-#def log_likelihood_reg(gmm, data, test_index):
+    y = np.hstack((numeration, score))
+    size = y.shape[1]
+    y = tuple(map(tuple, y))
 
-def log_likelihood(gmm, data):
-    log_likelihood = 1
-    scores = gmm.score(data)
-    for data in scores:
-        log_likelihood += data
-    return log_likelihood
+    y = sorted(y, key = lambda x: x[size - 1], reverse=True)
 
-def get_less_possible(gmm, data, fraction):
-    probs = gmm.score(data)
-    dataprobs = np.hstack(data, probs)
-    np.sort(dataprobs, axis = -1, kind = 'mergesort')
-    return dataprob[(-len(dataprob)*fraction ):-1, 0:3]
+    startindex = int(-round((fraction*len(y)), ndigits=0))-1
+    anomalies = y[startindex:]
+
+    anomalies = sorted(anomalies, key = lambda x: x[0])
+    anomalies = np.array(anomalies)
+    anomalies = anomalies[:,0]
+
+    return anomalies
+
