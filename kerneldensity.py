@@ -10,24 +10,23 @@ import numpy as np
 def kerneldensity(data, fraction=0.02, kernel='gaussian', bandwidth = 1.0):
     numeration = [[i] for i in xrange(1, len(data)+1, 1)]
     numeration = np.array(numeration)
-    y = np.hstack((numeration, data))
 
     kde = KernelDensity(kernel = kernel, bandwidth=bandwidth)
     kde.fit(data)
     score = np.exp(kde.score_samples(data))
     score = score.reshape(numeration.shape)
 
-    y = np.hstack((y, score))
+    y = np.hstack((numeration, score))
     size = y.shape[1]
     y = tuple(map(tuple, y))
 
     y = sorted(y, key = lambda x: x[size - 1], reverse=True)
 
     startindex = int(-round((fraction*len(y)), ndigits=0))-1
-    y = y[startindex:]
+    anomalies = y[startindex:]
 
-    y = sorted(y, key = lambda x: x[0])
-    y = np.array(y)
+    anomales = sorted(y, key = lambda x: x[0])
+    anomalies = np.array(anomalies)
+    anomalies = anomalies[:,0]
 
-    anomalies = y[:,0]
     return anomalies
