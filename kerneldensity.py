@@ -3,14 +3,17 @@ __author__ = '1'
 from sklearn.neighbors import KernelDensity
 import numpy as np
 
-def kerneldensity(x, fraction=0.02):
-    numeration = [[i] for i in xrange(1, len(x)+1, 1)]
+#all parameters except data are additional
+#fraction is supposed fraction of outliers
+#kernel in (‘gaussian’;’tophat’;’epanechnikov’;’exponential’;’linear’;’cosine’)
+def kerneldensity(data, fraction=0.02, kernel='gaussian', bandwidth = 1.0):
+    numeration = [[i] for i in xrange(1, len(data)+1, 1)]
     numeration = np.array(numeration)
-    y = np.hstack((numeration, x))
+    y = np.hstack((numeration, data))
 
-    kde = KernelDensity(kernel = 'gaussian', bandwidth=1)
-    kde.fit(x)
-    score = np.exp(kde.score_samples(x))
+    kde = KernelDensity(kernel = kernel, bandwidth=bandwidth)
+    kde.fit(data)
+    score = np.exp(kde.score_samples(data))
     score = score.reshape(numeration.shape)
 
     y = np.hstack((y, score))
